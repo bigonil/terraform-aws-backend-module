@@ -3,8 +3,12 @@ provider "aws" {
   profile = "lb-aws-admin" # Ensure this profile exists in your AWS credentials file
 }
 
+resource "random_id" "suffix" {
+  byte_length = 4
+}
+
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = var.bucket_name
+  bucket = "${var.bucket_name}-${random_id.suffix.hex}"
 
 }
 
