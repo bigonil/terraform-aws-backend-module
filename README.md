@@ -1,23 +1,25 @@
 # terraform-aws-backend-module
 
-This Terraform module creates an AWS backend for managing remote state and locks using S3 and DynamoDB.
+A Terraform module to provision an AWS S3 bucket and DynamoDB table for remote state management and state locking.
 
 ## Usage
 
-Add this module to your Terraform configuration file:
-
 ```hcl
 module "backend" {
-  source         = "github.com/<your-username>/terraform-aws-backend-module"
-  region         = "eu-west-1"                # AWS region
-  bucket_name    = "terraform-bucket-name"    # S3 bucket name
-  dynamodb_table = "terraform-locks"          # DynamoDB table name
+  source         = "<registry-username>/backend/aws" # Replace with the actual registry source
+  region         = "eu-west-1"
+  bucket_name    = "terraform-bucket-name"
+  dynamodb_table = "terraform-locks"
+  tags = {
+    Environment = "dev"
+    Project     = "example"
+  }
 }
 ```
 
-### Example backend configuration
+## Backend Configuration Example
 
-In your `backend.tf`:
+Configure your backend in `backend.tf`:
 
 ```hcl
 terraform {
@@ -33,20 +35,26 @@ terraform {
 
 ## Variables
 
-- `region`: AWS region where resources will be created
-- `bucket_name`: Name of the S3 bucket for state
-- `dynamodb_table`: Name of the DynamoDB table for locks
+| Name           | Description                                 | Type   | Default | Required |
+|----------------|---------------------------------------------|--------|---------|----------|
+| region         | AWS region for resources                    | string | n/a     | yes      |
+| bucket_name    | Name of the S3 bucket for state             | string | n/a     | yes      |
+| dynamodb_table | Name of the DynamoDB table for state locks  | string | n/a     | yes      |
+| tags           | Tags to apply to resources                  | map    | {}      | no       |
 
 ## Outputs
 
-- `bucket_arn`: ARN of the created S3 bucket
-- `dynamodb_table_arn`: ARN of the created DynamoDB table
+| Name               | Description                      |
+|--------------------|----------------------------------|
+| bucket_arn         | ARN of the created S3 bucket      |
+| dynamodb_table_arn | ARN of the DynamoDB table         |
 
-## Prerequisites
+## Requirements
 
-- AWS CLI configured
-- Permissions to create S3 buckets and DynamoDB tables
+- Terraform >= 1.0.0
+- AWS provider >= 4.0.0
+- AWS CLI configured with appropriate permissions
 
 ## License
 
-This module is licensed under the Apache 2.0 License.
+Apache 2.0 License. See LICENSE file for details.
